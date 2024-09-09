@@ -2,15 +2,18 @@ import express from "express"
 import authRoutes from "./routes/auth.routes.js"
 import dotenv from "dotenv";
 import connectMongoDB from "./db/connectMongoDB.js";
-
-const app =express();
+import cookieParser from "cookie-parser";
 
 dotenv.config();
+
+const app =express();
 const PORT=process.env.PORT||5000;
-console.log(process.env.MONGO_URI);
-console.log(process.env.PORT);
+
+app.use(express.json());
 
 app.use("/api/auth",authRoutes);
+
+app.use(cookieParser());
 
 app.listen(PORT,()=>{
     console.log(`server is running on port ${PORT}`);
