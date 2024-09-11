@@ -2,6 +2,7 @@ import express from "express"
 import authRoutes from "./routes/auth.routes.js"
 import userRoutes from "./routes/user.routes.js"
 import postRoutes from "./routes/post.routes.js"
+import notificationRoutes from "./routes/notification.routes.js"
 
 import {v2 as cloudinary} from 'cloudinary';
 import dotenv from "dotenv";
@@ -27,6 +28,7 @@ app.use(express.urlencoded({extended:true}));
 app.use("/api/auth",authRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/post",postRoutes)
+app.use("/api/notification",notificationRoutes)
 
 
 
