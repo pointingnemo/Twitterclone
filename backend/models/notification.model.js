@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const notificationSchema=new mongoose.Schema({
 
@@ -21,8 +21,8 @@ const notificationSchema=new mongoose.Schema({
             type:Boolean,
             default:false
         }
-})
+});
 
-const Notification= mongoose.model('Notification',notificationSchema);
+const Notification= mongoose.model("Notification",notificationSchema);
 
 export default Notification;

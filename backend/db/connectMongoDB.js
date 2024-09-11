@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Notification from "../models/notification.model.js";
 
 const connectMongoDB=async()=>{
     try{

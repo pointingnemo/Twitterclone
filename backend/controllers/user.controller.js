@@ -1,6 +1,9 @@
 import User from "../models/user.model.js";
 import bcrypt from 'bcryptjs'
 import {v2 as cloudinary} from 'cloudinary';
+import Notification from "../models/notification.model.js";
+
+
 export const getUserProfile=async(req,res)=>{
 
 const{username}=req.params;
@@ -18,13 +21,13 @@ try {
 
     console.log("Error in getUserProfile");
     
-    res.status(500).josn({error:error.message})
+    res.status(500).json({error:error.message})
 
 }
 
 };
 
-export const followUnfollowUser=async(res,req)=>{
+export const followUnfollowUser=async(req,res)=>{
     try {
 
         const{id}=req.params;
@@ -38,19 +41,19 @@ export const followUnfollowUser=async(res,req)=>{
 
         if(!userToModify||!currentUser) return res.status(400).json({error:"usernot found"});
 
-        const isFollowing=currentUser.following.includes(id);
+        const isFollowing=currentUser.following.includes(id.toString());
 
         if(isFollowing)
         {
             await User.findByIdAndUpdate(id,{$pull:{followers:req.user._id}});
-            await User.findByIdAndUpdate(req.user._id,{$pull:{following:req.user}});
-            res.statue(200).json({message:"User unfollowed successfully"});
+            await User.findByIdAndUpdate(req.user._id,{$pull:{following:id}});
+            res.status(200).json({message:"User unfollowed successfully"});
         }else{
             await User.findByIdAndUpdate(id,{$push:{followers:req.user._id}});
-            await User.findByIdAndUpdate(req.user._id,{$push:{following:req.user}});
+            await User.findByIdAndUpdate(req.user._id,{$push:{following:id}});
              const newNotification=new Notification({
 
-                type:'follow',
+                type:"follow",
                 from :req.user._id,
                 to:userToModify._id,
 
@@ -59,7 +62,7 @@ export const followUnfollowUser=async(res,req)=>{
              await newNotification.save();
               //return id od user as response
 
-            res.statue(200).json({message:"User followed successfully"});
+            res.status(200).json({message:"User followed successfully"});
 
            
 
@@ -68,11 +71,11 @@ export const followUnfollowUser=async(res,req)=>{
     } catch (error) {
         console.log("Error in followUnfollowUser");
     
-       res.status(50).josn({error:error.message})
+        res.status(500).json({error:error.message})
     }
 }
 
-export const getSuggestedUsers=async(res,req)=>{
+export const getSuggestedUsers=async(req,res)=>{
 
     try {
 
@@ -94,22 +97,22 @@ export const getSuggestedUsers=async(res,req)=>{
         
         getSuggestedUsers.forEach(user=>user.password=null);
 
-        res.status(200).josn(getSuggestedUsers);
+        res.status(200).json(getSuggestedUsers);
 
 
     } catch (error) {
         
         console.log("Error in getSuggestesUsers",error.message);
     
-       res.status(500).josn({error:error.message})
+        res.status(500).json({error:error.message})
 
     }
 
 }
 
-export const updateUser=async(res,req)=>{
+export const updateUser=async(req,res)=>{
 
-    const{fullname,email,username,currentPassword,newPassword,bio,link}=req.body;
+    const{fullName,email,username,currentPassword,newPassword,bio,link}=req.body;
 
     let{profileImg,coverImg}=req.body;
 
@@ -118,7 +121,7 @@ export const updateUser=async(res,req)=>{
 
     try {
 
-        let user=await User.findById(userid);
+        let user=await User.findById(userId);
         if(!user) return res.status(404).json({message:"usernot found" });
 
         if((!newPassword&&currentPassword)||(!currentPassword&&newPassword))
@@ -158,13 +161,13 @@ export const updateUser=async(res,req)=>{
         }
     
 
-        user.fullName=fullname||user.fullName;
-        user.email=fullname||user.email;
-        user.username=fullname||user.username;
-        user.bio=fullname||user.bio;
-        user.link=fullname||user.link;
-        user.profileImg=fullname||user.profileImg;
-        user.coverImg=fullname||user.coverImg;
+        user.fullName=fullName||user.fullName;
+        user.email=email||user.email;
+        user.username=username||user.username;
+        user.bio=bio||user.bio;
+        user.link=link||user.link;
+        user.profileImg=profileImg||user.profileImg;
+        user.coverImg=coverImg||user.coverImg;
 
         user=await user.save();
 

@@ -1,6 +1,7 @@
 import express from "express"
 import authRoutes from "./routes/auth.routes.js"
 import userRoutes from "./routes/user.routes.js"
+import postRoutes from "./routes/post.routes.js"
 
 import {v2 as cloudinary} from 'cloudinary';
 import dotenv from "dotenv";
@@ -17,12 +18,17 @@ cloudinary.config({
 const app =express();
 const PORT=process.env.PORT||5000;
 
+app.use(cookieParser());
+
 app.use(express.json());
+
+app.use(express.urlencoded({extended:true}));
 
 app.use("/api/auth",authRoutes);
 app.use("/api/users",userRoutes);
+app.use("/api/post",postRoutes)
 
-app.use(cookieParser());
+
 
 app.listen(PORT,()=>{
     console.log(`server is running on port ${PORT}`);
