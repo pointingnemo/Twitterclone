@@ -116,7 +116,7 @@ export const updateUser=async(req,res)=>{
 
     let{profileImg,coverImg}=req.body;
 
-
+    console.log(req.body)
     const userId=req.user._id;
 
     try {

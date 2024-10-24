@@ -9,13 +9,15 @@ export const createPost=async(req,res)=>{
         const{text}=req.body;
         let{img}=req.body;
 
+        console.log(req.body)
+
         const userId=req.user._id.toString();
 
         const user=await User.findById(userId)
         if(!user)return res.status(404).json({message:"user not found"})
 
-        if(!text&&img){
-            return res.status(400).json({error:"Post must have text of image"});
+        if(!text&&!img){
+            return res.status(400).json({error:"Post must have text or image"});
 
         }
 
@@ -172,13 +174,13 @@ export const getAllPosts=async(req,res)=>{
 
 }
 
- export const getLikedPosts=async(req,res)=>{
+ export const getMyLikedPosts=async(req,res)=>{
 
-    const userId=req.params.id;
 
     try {
 
-        const user =await User.findById(userId);
+        // const user=await User.findById(req.user._id).select("-password");
+        const user=req.user;
         if(!user) return res.status(404).json({error:"User not found"});
 
         const likedPosts=await Post.find({_id:{$in:user.likedPosts}})
@@ -201,6 +203,67 @@ export const getAllPosts=async(req,res)=>{
     }
 
  }
+
+
+
+//  export const getLikedPosts=async(req,res)=>{
+
+//     const userId=req.params.id;
+
+//     try {
+
+//         const user =await User.findById(userId);
+//         if(!user) return res.status(404).json({error:"User not found"});
+
+//         const likedPosts=await Post.find({_id:{$in:user.likedPosts}})
+//         .populate({
+//             path:"user",
+//             select:"-password"
+//         }).populate({
+//             path:"comments.user",
+//             select:"-password"
+//         });
+
+//         res.status(200).json(likedPosts);
+
+        
+//     } catch (error) {
+
+//         console.log("Error in getlikedPosts",error);
+//         res.status(500).json({error:error.message});
+        
+//     }
+
+//  }
+
+export const getLikedPosts = async (req, res) => {
+    try {
+        
+        const { username } = req.params;
+
+      
+        const user = await User.findOne({ username });
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+       
+        const likedPosts = await Post.find({ _id: { $in: user.likedPosts } })
+            .populate({
+                path: "user",
+                select: "-password" 
+            })
+            .populate({
+                path: "comments.user",
+                select: "-password" 
+            });
+
+       
+        res.status(200).json(likedPosts);
+    } catch (error) {
+        console.error("Error in getLikedPosts:", error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 
  export const getFollowingPosts=async(req,res)=>{
 
@@ -260,6 +323,69 @@ export const getAllPosts=async(req,res)=>{
     } catch (error) {
 
         console.log("Error in getUserPosts",error);
+        res.status(500).json({error:error.message});
+    }
+
+ }
+
+
+ export const getMyPosts=async(req,res)=>{
+
+    try {
+        console.log("Requesting posts for User ID:", req.user._id);
+        const user=await User.findById(req.user._id).select("-password");
+
+
+        if(!user) return res.status(404).json({erorr:"User not found in controller"});
+
+        const posts=await Post.find({user:user._id}).sort({createdAt:-1})
+        .populate({
+
+            path:"user",
+            select:"-password"
+
+        }).populate({
+
+            path:"comments.user",
+            select:"-password"
+
+        })
+
+        res.status(200).json(posts);
+
+
+    } catch (error) {
+
+        console.log("Error in getUserPosts",error);
+        res.status(500).json({error:error.message});
+    }
+
+ }
+
+
+ export const getPost=async(req,res)=>{
+
+    try {
+       const postId=req.params.id
+        const post=await Post.findById(postId).sort({createdAt:-1})
+        .populate({
+
+            path:"user",
+            select:"-password"
+
+        }).populate({
+
+            path:"comments.user",
+            select:"-password"
+
+        })
+        if(!post) return res.status(404).json({erorr:"post not found"});
+        res.status(200).json(post);
+
+
+    } catch (error) {
+
+        console.log("Error in getPost",error);
         res.status(500).json({error:error.message});
     }
 
