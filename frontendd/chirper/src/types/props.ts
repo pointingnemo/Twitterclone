@@ -33,3 +33,11 @@ export interface postProps{
     createdAt: string;
     
 }
+
+export interface NotificationProps {
+    _id: string;
+    from: userprops;
+    to:userprops;
+    type: string;
+    read: boolean;
+  }

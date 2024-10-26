@@ -397,6 +397,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ params }) => {
       fetchProfile();
       fetchMyPosts();
       fetchLikedPosts();
+      
     };
 
     fetchUsername();
@@ -431,7 +432,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ params }) => {
   if (!user) {
     return <div>Loading profile...</div>;
   }
-
+  console.log(user);
   return (
     <div>
       <SideBarComponent />

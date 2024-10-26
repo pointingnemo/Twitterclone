@@ -1,5 +1,7 @@
 import React from 'react';
 import { userprops } from '@/types/props';
+import Image from 'next/image';
+import defaultProfilePic from '@/public/profilepic.svg'
 
 interface CommentProps {
   text: string;
@@ -9,14 +11,18 @@ interface CommentProps {
 
 const CommentComponent: React.FC<CommentProps> = ({ text, user }) => {
 
+  console.log(user.username)
+
     
   return (
     <div className="border border-gray-700 p-4 mb-4 rounded-lg bg-gray-800">
       <div className="flex items-center mb-2">
         {/* User Profile Picture */}
-        <img
-          src={user.profileImg.toString()}
+        <Image
+          src={user.profileImg?user.profileImg.toString(): defaultProfilePic}
           alt={`${user.username}'s profile`}
+          width={40}
+          height={40}
           className="w-10 h-10 rounded-full mr-3"
         />
 

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 const Authentication = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isFading, setIsFading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     username: "",
@@ -18,21 +19,30 @@ const Authentication = () => {
   const router = useRouter();
 
   const toggleForm = () => {
-    setIsLogin(!isLogin);
-    setError(null);  
+    setIsFading(true);
+    setError(null);
+
+ 
+    setTimeout(() => {
+      setIsLogin((prevIsLogin) => !prevIsLogin);
+      setIsFading(false);
+    }, 300); 
   };
 
-  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e:any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const endpoint = isLogin ? "http://localhost:5000/api/auth/login" : "http://localhost:5000/api/auth/signup";
+    const endpoint = isLogin
+      ? "http://localhost:5000/api/auth/login"
+      : "http://localhost:5000/api/auth/signup";
+
     const payload = isLogin
       ? { username: formData.username, password: formData.password }
       : {
@@ -48,9 +58,8 @@ const Authentication = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials:'include',
+        credentials: "include",
         body: JSON.stringify(payload),
-        
       });
 
       if (!response.ok) {
@@ -59,10 +68,11 @@ const Authentication = () => {
       }
 
       const data = await response.json();
-      console.log("User data:", data);
-
-
-      router.push("/");
+      if (!isLogin) {
+        alert("Please check your email for verification instructions.");
+      } else {
+        router.push("/");
+      }
     } catch (err:any) {
       setError(err.message);
     } finally {
@@ -71,8 +81,12 @@ const Authentication = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-800">
+      <div
+        className={`w-full max-w-md p-8 bg-gray-800 rounded-lg shadow-md transform transition-all duration-400 ${
+          isFading ? "opacity-0" : "opacity-100"
+        }`}
+      >
         <h2 className="text-2xl font-semibold text-center mb-6">
           {isLogin ? "Login" : "Sign Up"}
         </h2>
@@ -81,14 +95,14 @@ const Authentication = () => {
         <form onSubmit={handleSubmit}>
           {!isLogin && (
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="fullName">
+              <label className="block text-white mb-2" htmlFor="fullName">
                 Full Name
               </label>
               <input
                 type="text"
                 name="fullName"
                 id="fullName"
-                className="w-full p-3 border rounded"
+                className="w-full p-3 border rounded text-black"
                 placeholder="Enter your full name"
                 value={formData.fullName}
                 onChange={handleChange}
@@ -97,44 +111,46 @@ const Authentication = () => {
             </div>
           )}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="username">
+            <label className="block mb-2" htmlFor="username">
               Username
             </label>
             <input
               type="text"
               name="username"
               id="username"
-              className="w-full p-3 border rounded"
+              className="w-full p-3 border rounded text-black"
               placeholder="Enter your username"
               value={formData.username}
               onChange={handleChange}
               required
             />
           </div>
+          {!isLogin && (
+            <div className="mb-4">
+              <label className="block mb-2" htmlFor="email">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                className="w-full p-3 border rounded text-black"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                required={!isLogin}
+              />
+            </div>
+          )}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              className="w-full p-3 border rounded"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
-              required={!isLogin}
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="password">
+            <label className="block mb-2" htmlFor="password">
               Password
             </label>
             <input
               type="password"
               name="password"
               id="password"
-              className="w-full p-3 border rounded"
+              className="w-full p-3 border rounded text-black"
               placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
@@ -144,7 +160,7 @@ const Authentication = () => {
           <button
             type="submit"
             className={`w-full p-3 ${
-              isLogin ? "bg-blue-500" : "bg-green-500"
+              isLogin ? "bg-emerald-900" : "bg-emerald-900"
             } text-white rounded`}
             disabled={loading}
           >
@@ -155,10 +171,7 @@ const Authentication = () => {
         <div className="mt-4 text-center">
           <p>
             {isLogin ? "Don't have an account?" : "Already have an account?"}
-            <button
-              onClick={toggleForm}
-              className="ml-2 text-blue-500 underline"
-            >
+            <button onClick={toggleForm} className="ml-2 text-blue-500 underline">
               {isLogin ? "Sign Up" : "Login"}
             </button>
           </p>

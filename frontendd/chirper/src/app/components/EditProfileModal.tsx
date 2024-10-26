@@ -86,7 +86,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium text-blue-500">Full Name</label>
+            <label className="block text-sm font-medium text-blue-400">Full Name</label>
             <input
               type="text"
               value={fullName.toString()}
@@ -97,7 +97,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
 
           {/* Current Password */}
           <div>
-            <label className="block text-sm font-medium text-blue-500">Current Password</label>
+            <label className="block text-sm font-medium text-blue-400">Current Password</label>
             <input
               type="password"
               value={currentPassword}
@@ -109,7 +109,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
 
           {/* Username */}
           <div>
-            <label className="block text-sm font-medium text-blue-500">Username</label>
+            <label className="block text-sm font-medium text-blue-400">Username</label>
             <input
               type="text"
               value={username.toString()}
@@ -120,7 +120,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
 
           {/* New Password */}
           <div>
-            <label className="block text-sm font-medium text-blue-500">New Password</label>
+            <label className="block text-sm font-medium text-blue-400">New Password</label>
             <input
               type="password"
               value={newPassword}
@@ -132,7 +132,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-blue-500">Email</label>
+            <label className="block text-sm font-medium text-blue-400">Email</label>
             <input
               type="email"
               value={email.toString()}
@@ -143,7 +143,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
 
           {/* Bio */}
           <div className="col-span-2">
-            <label className="block text-sm font-medium text-blue-500">Bio</label>
+            <label className="block text-sm font-medium text-blue-400">Bio</label>
             <textarea
               value={bio.toString()}
               onChange={(e) => setBio(e.target.value)}
@@ -154,7 +154,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
 
           {/* Link */}
           <div>
-            <label className="block text-sm font-medium text-blue-500">Link</label>
+            <label className="block text-sm font-medium text-blue-400">Link</label>
             <input
               type="text"
               value={link.toString()}
@@ -166,7 +166,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
 
           {/* Profile Image */}
           <div>
-            <label className="block text-sm font-medium text-blue-500">Profile Image</label>
+            <label className="block text-sm font-medium text-blue-400">Profile Image</label>
             <input
               type="file"
               accept="image/*"
@@ -177,7 +177,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
 
           {/* Cover Image */}
           <div>
-            <label className="block text-sm font-medium text-blue-500">Cover Image</label>
+            <label className="block text-sm font-medium text-blue-400">Cover Image</label>
             <input
               type="file"
               accept="image/*"
@@ -189,7 +189,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user, onClose, onSa
 
         {/* Action buttons */}
         <div className="flex justify-end space-x-4 mt-6">
-          <button onClick={onClose} className="py-2 px-4 bg-gray-200 rounded">Cancel</button>
+          <button onClick={onClose} className="py-2 px-4 bg-red-900 rounded text-white">Cancel</button>
           <button onClick={handleSave} className="py-2 px-4 bg-sky-500 text-white rounded">Save</button>
         </div>
       </div>
